@@ -1,7 +1,9 @@
-<script>
-export default {};
+<script setup>
+import { RouterView } from "vue-router";
 </script>
 
-<style>
-/*每个页面公共css */
-</style>
+<template>
+  <RouterView />
+</template>
+
+<style scoped></style>
