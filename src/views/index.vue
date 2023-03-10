@@ -1,7 +1,20 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import { Cloud } from "laf-client-sdk";
 
+const cloud = new Cloud({
+  baseUrl: "https://jyf6wk.laf.dev",
+  getAccessToken: () => "",
+});
 
+async function send() {
+  list.value.push({
+    text: "这里说话",
+    avatar: "/log.png",
+  });
+  // const res = await cloud.invoke("send", { message: "你好,你是谁" });
+  // console.log(res);
+}
 
 //问题
 const problem = ref();
@@ -13,28 +26,21 @@ const list: any = ref([]);
 
 const loading = ref(false);
 
-
 const error = ref(false);
-
-
 </script>
-
 
 <template>
   <div class="page">
-
     <n-alert v-show="error" type="error"> 请点击体验登录 </n-alert>
 
     <div class="begintitle">
-      <h1 v-show="!list.length">ChatGPT
-      </h1>
+      <h1 v-show="!list.length" @click="send">ChatGPT</h1>
     </div>
 
     <div id="myList">
       <div :class="item.type === 0 ? 'problemList' : 'answerList'" v-for="item in list">
         <img class="listImg" :src="item.avatar" alt="" />
-        <div v-html="item.text" class="listText">
-       </div>
+        <div v-html="item.text" class="listText"></div>
       </div>
       <div v-show="loading" class="answerList">
         <img class="listImg" src="/log.png" alt="" />
@@ -121,7 +127,7 @@ const error = ref(false);
     </div>
     <div class="steppingstone"></div>
 
-    <n-button  v-show="list.length" class="defbut">
+    <n-button v-show="list.length" class="defbut">
       <svg
         class="w-5 h-5"
         xmlns="http://www.w3.org/2000/svg"
@@ -306,25 +312,24 @@ textarea {
 
 @media screen and (max-width: 600px) {
   .inputbox {
-  position: fixed;
-  width: 100%;
-  height: 100px;
-  bottom: 0px;
-  z-index: 9;
-}
-.text {
-  position: absolute;
-  top: 30px;
-  border: 1px solid #e5e5e5;
-  height: 40px;
-  padding: 10px;
-}
-#submit-btn {
-  position: fixed;
-  right: 15px;
-  bottom: 35px;
-  background-color: #fff;
-}
-
+    position: fixed;
+    width: 100%;
+    height: 100px;
+    bottom: 0px;
+    z-index: 9;
+  }
+  .text {
+    position: absolute;
+    top: 30px;
+    border: 1px solid #e5e5e5;
+    height: 40px;
+    padding: 10px;
+  }
+  #submit-btn {
+    position: fixed;
+    right: 15px;
+    bottom: 35px;
+    background-color: #fff;
+  }
 }
 </style>
