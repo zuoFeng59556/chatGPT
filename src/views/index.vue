@@ -56,7 +56,7 @@ function setScreen() {
 <template>
   <div class="page">
     <div class="begintitle">
-      <h1 v-show="!list.length" @click="send">ChatGPT</h1>
+      <h1 v-show="!list.length" @click="send">左风的ChatGPT</h1>
     </div>
 
     <div id="myList">
