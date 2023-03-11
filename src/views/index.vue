@@ -28,6 +28,8 @@ async function send() {
     avatar: "/avatar.png",
   });
 
+  setScreen();
+
   const message = question.value;
   question.value = "";
   loading.value = true;
@@ -41,8 +43,7 @@ async function send() {
 
   parentMessageId.value = res.id;
 
-  res.text = res.text.replace(/\\n/g, "<br/>");
-  console.log(res);
+  res.text = res.text.replace(/\n/g, "<br>");
 
   list.value.push({
     text: res.text,
@@ -50,6 +51,13 @@ async function send() {
   });
 
   loading.value = false;
+  setScreen();
+}
+
+function setScreen() {
+  setTimeout(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, 0);
 }
 </script>
 
@@ -249,7 +257,7 @@ async function send() {
 
 .answerList {
   display: flex;
-  padding: 0px 200px;
+  padding: 0px 10%;
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
 }
