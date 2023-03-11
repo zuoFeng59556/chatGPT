@@ -7,18 +7,10 @@ const cloud = new Cloud({
   getAccessToken: () => "",
 });
 
-const parentMessageId = ref("");
-//问题
-const question = ref("");
-
-//回答
-const answer = ref();
-
 const list: any = ref([]);
-
+const question = ref("");
+const parentMessageId = ref("");
 const loading = ref(false);
-
-const error = ref(false);
 
 async function send() {
   if (loading.value) return;
