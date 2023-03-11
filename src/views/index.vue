@@ -7,17 +7,9 @@ const cloud = new Cloud({
   getAccessToken: () => "",
 });
 
-async function send() {
-  list.value.push({
-    text: "这里说话",
-    avatar: "/log.png",
-  });
-  // const res = await cloud.invoke("send", { message: "你好,你是谁" });
-  // console.log(res);
-}
-
+const parentMessageId = ref("");
 //问题
-const problem = ref();
+const question = ref("");
 
 //回答
 const answer = ref();
@@ -27,12 +19,42 @@ const list: any = ref([]);
 const loading = ref(false);
 
 const error = ref(false);
+
+async function send() {
+  if (loading.value) return;
+
+  list.value.push({
+    text: question.value,
+    avatar: "/avatar.png",
+  });
+
+  const message = question.value;
+  question.value = "";
+  loading.value = true;
+
+  let res;
+  if (!parentMessageId.value) {
+    res = await cloud.invoke("send", { message });
+  } else {
+    res = await cloud.invoke("send", { message, parentMessageId: parentMessageId.value });
+  }
+
+  parentMessageId.value = res.id;
+
+  res.text = res.text.replace(/\\n/g, "<br/>");
+  console.log(res);
+
+  list.value.push({
+    text: res.text,
+    avatar: "/log.png",
+  });
+
+  loading.value = false;
+}
 </script>
 
 <template>
   <div class="page">
-    <n-alert v-show="error" type="error"> 请点击体验登录 </n-alert>
-
     <div class="begintitle">
       <h1 v-show="!list.length" @click="send">ChatGPT</h1>
     </div>
@@ -42,6 +64,7 @@ const error = ref(false);
         <img class="listImg" :src="item.avatar" alt="" />
         <div v-html="item.text" class="listText"></div>
       </div>
+
       <div v-show="loading" class="answerList">
         <img class="listImg" src="/log.png" alt="" />
         <img class="addin" src="/loading.gif" alt="" />
@@ -127,69 +150,54 @@ const error = ref(false);
     </div>
     <div class="steppingstone"></div>
 
-    <n-button v-show="list.length" class="defbut">
-      <svg
-        class="w-5 h-5"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        viewBox="0 0 1024 1024"
-      >
-        <path
-          d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"
-          fill="currentColor"
-        ></path></svg
-      >清空内容</n-button
-    >
-
     <div class="inputbox">
       <div class="relative flex h-full flex-1 md:flex-col">
         <div
           class="flex flex-col w-full py-2 flex-grow md:py-3 md:pl-4 relative border border-black/10 bg-white dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:shadow-[0_0_15px_rgba(0,0,0,0.10)]"
         >
-          <n-spin :show="loading">
-            <textarea
-              v-show="!loading"
-              tabindex="0"
-              data-id="root"
-              rows="1"
-              v-model="problem"
-              id="message"
-              class="text m-0 w-full resize-none border-0 bg-transparent p-0 pl-2 pr-7 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pl-0"
-            ></textarea>
-            <textarea
-              v-show="loading"
-              readonly
-              tabindex="0"
-              data-id="root"
-              rows="1"
-              v-model="problem"
-              id="message"
-              class="text m-0 w-full resize-none border-0 bg-transparent p-0 pl-2 pr-7 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pl-0"
-            ></textarea>
-          </n-spin>
+          <textarea
+            v-show="!loading"
+            @keyup.enter="send"
+            tabindex="0"
+            data-id="root"
+            rows="1"
+            v-model="question"
+            id="message"
+            class="text m-0 w-full resize-none border-0 bg-transparent p-0 pl-2 pr-7 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pl-0"
+          ></textarea>
+          <!-- // 这里是禁用时展示 -->
+          <textarea
+            v-show="loading"
+            readonly
+            tabindex="0"
+            data-id="root"
+            rows="1"
+            v-model="question"
+            id="message"
+            class="text m-0 w-full resize-none border-0 bg-transparent p-0 pl-2 pr-7 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pl-0"
+          ></textarea>
 
-          <n-spin :show="loading">
-            <button
-              id="submit-btn"
-              class="absolute p-1 rounded-md text-gray-500 bottom-1.5 right-5 md:bottom-0 md:right-2 hover:bg-gray-100 dark:hover:text-gray-400 dark:hover:bg-gray-900 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent"
+          <button
+            id="submit-btn"
+            @click="send"
+            class="absolute p-1 rounded-md text-gray-500 bottom-1.5 right-5 md:bottom-0 md:right-2 hover:bg-gray-100 dark:hover:text-gray-400 dark:hover:bg-gray-900 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent"
+          >
+            <svg
+              stroke="currentColor"
+              fill="none"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4 mr-1"
+              height="1.5em"
+              width="1.5em"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                stroke="currentColor"
-                fill="none"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="h-4 w-4 mr-1"
-                height="1.5em"
-                width="1.5em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
-            </button>
-          </n-spin>
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
