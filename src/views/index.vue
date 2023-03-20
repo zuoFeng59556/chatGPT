@@ -6,14 +6,15 @@ import wx from "../../public/wx.png";
 import { marked } from "marked";
 import { User } from "@element-plus/icons-vue";
 import QrcodeVue from "qrcode.vue";
-import { ElMessage } from 'element-plus'
+import { ElMessage } from "element-plus";
 
 const cloud = new Cloud({
   baseUrl: "https://jyf6wk.laf.dev",
-  getAccessToken: () => "",
+  getAccessToken: () => localStorage.getItem("access_token"),
   timeout: 60000,
 });
 
+//======================================data======================================
 const list = ref([]);
 const question = ref("");
 const parentMessageId = ref("");
@@ -29,20 +30,30 @@ const upCode = ref(false);
 const content = ref("发送验证码");
 const totalTime = ref(60);
 const canClick = ref(true);
+const amount = ref(0);
+const codeUrl = ref("");
+const payOrder = ref("");
 const tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
 
+//======================================created======================================
+getAmount();
 
+//======================================function======================================
+
+// 获取用户剩余次数
+async function getAmount() {
+  const res = await cloud.invoke("get-amount");
+  amount.value = res.amount;
+}
 
 async function getCode() {
-  
   if (!tel.test(phone.value)) return (err.value = true);
-  if(codebut.value) return
+  if (codebut.value) return;
   const res = await cloud.invoke("getCode", { phone: phone.value });
   console.log(res);
   console.log("123");
   countDown();
 }
-
 
 function countDown() {
   if (!canClick.value) return; //改动的是这两行代码
@@ -57,7 +68,7 @@ function countDown() {
       content.value = "重新发送验证码";
       totalTime.value = 60;
       canClick.value = true; //这里重新开启
-      codebut.value = false
+      codebut.value = false;
     }
   }, 1000);
 }
@@ -68,13 +79,30 @@ async function login() {
   if (res.code === 1) {
     localStorage.setItem("access_token", res.data.access_token);
     localStorage.setItem("user", JSON.stringify(res.data.user));
-    success()
-    centerDialogVisible2.value = false
+    success();
+    centerDialogVisible2.value = false;
+    getAmount();
+  } else {
+    ElMessage({
+      message: "无效的验证码",
+      type: "error",
+    });
   }
-
 }
 
 async function send() {
+  if (localStorage.getItem("access_token") == null)
+    return ElMessage({
+      message: "请先登录！",
+      type: "error",
+    });
+
+  if (amount.value <= 0)
+    return ElMessage({
+      message: "您的剩余次数不足，请充值！",
+      type: "error",
+    });
+
   if (loading.value) return;
   list.value.push({
     text: question.value,
@@ -126,6 +154,7 @@ async function send() {
   });
 
   loading.value = false;
+  getAmount();
   setScreen();
 }
 
@@ -144,25 +173,46 @@ function select(e) {
   indexUp.value = e;
 }
 
-function openCode() {
+async function openCode() {
+  let num = 0;
+  if (indexUp.value == 0) num = 1000;
+  if (indexUp.value == 1) num = 2000;
+  const res = await cloud.invoke("pay", { amount: num });
+  payOrder.value = res.orderId;
+  codeUrl.value = res.codeUrl;
   centerDialogVisible.value = false;
   upCode.value = true;
+  checkPay();
 }
 
+async function checkPay() {
+  const res = await cloud.invoke("check-pay-ordet", { order: payOrder.value });
+  if (res.code == 1) {
+    upCode.value = false;
+    getAmount();
+    ElMessage({
+      message: "充值成功",
+      type: "success",
+    });
+  } else {
+    setTimeout(() => {
+      checkPay();
+    }, 1000);
+  }
+}
 
 const success = () => {
   ElMessage({
-    message: '登录成功',
-    type: 'success',
-  })
-}
-
+    message: "登录成功",
+    type: "success",
+  });
+};
 
 //判断是否登录
-function judge(){
-  const access_token = localStorage.getItem('access_token')
-  if(access_token) return success("")
-  centerDialogVisible2.value = true
+function judge() {
+  const access_token = localStorage.getItem("access_token");
+  if (access_token) return success("");
+  centerDialogVisible2.value = true;
 }
 </script>
 
@@ -178,7 +228,7 @@ function judge(){
             </template>
           </el-popover>
 
-          <el-button @click="centerDialogVisible = true">会员</el-button>
+          <el-button @click="centerDialogVisible = true">充值</el-button>
 
           <el-button @click="judge">
             <el-icon style="vertical-align: middle">
@@ -201,10 +251,10 @@ function judge(){
     >
       <div class="cardbox">
         <el-card @click="select(0)" :class="indexUp === 0 ? 'box-card' : 'boxCard'">
-          <div class="useNumber">20次</div>
+          <div class="useNumber">200次</div>
           <div class="money">
             <span class="sign">￥</span>
-            <span class="number">1</span>
+            <span class="number">10</span>
           </div>
         </el-card>
         <el-card
@@ -212,10 +262,10 @@ function judge(){
           :class="indexUp === 1 ? 'box-card' : 'boxCard'"
           class="box-card"
         >
-          <div class="useNumber">100次</div>
+          <div class="useNumber">400次</div>
           <div class="money">
             <span class="sign">￥</span>
-            <span class="number">10</span>
+            <span class="number">20</span>
           </div>
         </el-card>
       </div>
@@ -228,7 +278,7 @@ function judge(){
 
     <el-dialog modal="true" v-model="upCode" width="50%" height="50%" center>
       <div class="qrcode">
-        <qrcode-vue value="abc" :size="300" level="H" />
+        <qrcode-vue :value="codeUrl" :size="300" level="H" />
       </div>
       <template #footer> </template>
     </el-dialog>
@@ -273,7 +323,6 @@ function judge(){
             class="loginbut"
             >{{ content }}</el-button
           >
-
         </div>
 
         <div class="loginbutbox">
@@ -377,15 +426,9 @@ function judge(){
         <p>对2021年后的世界和事件的了解有限</p>
       </div>
     </div>
-    <div class="steppingstone">
-    </div>
+    <div class="steppingstone"></div>
 
-
-
-
-    <div class="amount">
-      剩余100
-    </div>
+    <div class="amount">剩余{{ amount }}</div>
     <div class="inputbox">
       <input
         v-bind:readonly="loading"
@@ -424,7 +467,6 @@ function judge(){
         </div>
       </div>
     </div>
-  
   </div>
 </template>
 
@@ -558,8 +600,8 @@ function judge(){
   height: 160px;
 }
 
-.amount{
-  position: absolute;
+.amount {
+  position: fixed;
   bottom: 80px;
   right: 0px;
   width: 130px;
@@ -634,6 +676,7 @@ textarea {
   display: flex;
 }
 .box-card {
+  cursor: pointer;
   width: auto;
   margin: 20px;
   width: 160px;
@@ -656,7 +699,7 @@ textarea {
   height: 30px;
   margin: auto;
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
 }
 .money {
   width: 50%;
