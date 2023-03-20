@@ -83,6 +83,8 @@ function setScreen() {
   <div class="page">
     <div class="begintitle">
       <h1 v-show="!list.length" @click="send">左风的ChatGPT</h1>
+      <h2>免费额度用完了，我正在充值，大家可以先加一下群</h2>
+      <img src="../../public/wx.png" alt="" />
     </div>
 
     <div id="myList">
@@ -349,8 +351,17 @@ function setScreen() {
 
 .begintitle {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   /* padding: 50px 50px 30px 50px; */
 }
+
+.begintitle img {
+  width: 200px;
+}
+
 .begintitle h1 {
   padding: 50px;
   font-size: 28px;
