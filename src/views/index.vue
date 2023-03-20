@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import { Cloud } from "laf-client-sdk";
+import wx from "../../public/wx.png";
 // 将marked 引入
 import { marked } from "marked";
+import { User } from "@element-plus/icons-vue";
 
 const cloud = new Cloud({
   baseUrl: "https://jyf6wk.laf.dev",
@@ -14,6 +16,17 @@ const list = ref([]);
 const question = ref("");
 const parentMessageId = ref("");
 const loading = ref(false);
+const centerDialogVisible = ref(false);
+const centerDialogVisible2 = ref(false);
+const phone = ref("");
+const code = ref("");
+
+
+async function getCode(){
+   const res =  await cloud.invoke('getCode',{phone})
+    console.log(res);
+}
+
 
 async function send() {
   if (loading.value) return;
@@ -22,6 +35,7 @@ async function send() {
     text: question.value,
     avatar: "/avatar.png",
   });
+
 
   setScreen();
 
@@ -81,6 +95,77 @@ function setScreen() {
 
 <template>
   <div class="page">
+    <el-row class="head">
+      <div>
+        <el-col :span="24">
+          <el-popover placement="bottom" :width="300" trigger="click">
+            <el-image style="width: 100%; height: 100%" :src="wx" :fit="contain" />
+            <template #reference>
+              <el-button class="m-2">微信群</el-button>
+            </template>
+          </el-popover>
+
+          <el-button @click="centerDialogVisible = true">会员</el-button>
+
+          <el-button @click="centerDialogVisible2 = true">
+            <el-icon style="vertical-align: middle">
+              <User />
+            </el-icon>
+            <span style="vertical-align: middle">登录</span>
+          </el-button>
+        </el-col>
+      </div>
+    </el-row>
+    <div style="height: 50px"></div>
+
+    <el-dialog
+      modal="true"
+      v-model="centerDialogVisible"
+      title="Plus会员"
+      width="50%"
+      height="50%"
+      center
+    >
+      <div class="cardbox">
+        <el-card class="box-card"> 20次 </el-card>
+        <el-card class="box-card"> 20次 </el-card>
+      </div>
+
+      <template #footer> </template>
+    </el-dialog>
+
+    <el-dialog
+      modal="true"
+      v-model="centerDialogVisible2"
+      title="登录"
+      center
+      width="30%"
+    >
+      <div class="accountbox">
+        <div class="inputname">手机号：</div>
+        <el-input
+          class="elinput"
+          type="number"
+          v-model="phone"
+          placeholder="请输入手机号"
+        />
+      </div>
+
+      <div class="accountbox">
+        <div class="inputname">验证码：</div>
+
+        <el-input class="elinputcode" v-model="code" placeholder="请输入验证码" show-password />
+        <el-button @click="getCode" type="primary"  class="codebut">发送验证码</el-button>
+      </div>
+
+
+      <div class="loginbutbox">
+        <el-button   class="loginbut">登录</el-button>
+      </div>
+
+      <template #footer> </template>
+    </el-dialog>
+
     <div class="begintitle">
       <h1 v-show="!list.length" @click="send">左风的ChatGPT</h1>
       <h2>免费额度用完了，我正在充值，大家可以先加一下群</h2>
@@ -399,6 +484,53 @@ textarea {
   outline: none;
   overflow-y: hidden;
 }
+.head {
+  position: fixed;
+  width: 100%;
+  padding: 0px 30px;
+  line-height: 50px;
+  justify-content: end;
+  border-bottom: 1px solid #e5e5e5;
+  background-color: #fff;
+  z-index: 10;
+}
+
+.cardbox {
+  display: flex;
+}
+.box-card {
+  width: auto;
+  margin: 20px;
+  width: 160px;
+  height: 180px;
+}
+.accountbox {
+  margin: auto;
+  margin-top: 10px;
+  display: flex;
+}
+.inputname {
+  width: 80px;
+}
+.elinput{
+  width: 400px;
+}
+.elinputcode{
+  width: 300px;
+}
+.codebut{
+  height: 40px;
+}
+.loginbutbox{
+  margin: auto;
+  margin-top: 20px;
+  width: 120px;
+  height: 40px;
+}
+.loginbut{
+  width: 120px;
+  height: 40px;
+}
 
 @media screen and (max-width: 600px) {
   .text {
@@ -408,6 +540,9 @@ textarea {
     height: 45px;
     padding: 10px;
     width: 80%;
+  }
+  .dialog {
+    width: 100%;
   }
 }
 </style>
