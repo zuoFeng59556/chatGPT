@@ -5,6 +5,8 @@ import wx from "../../public/wx.png";
 // 将marked 引入
 import { marked } from "marked";
 import { User } from "@element-plus/icons-vue";
+import QrcodeVue from "qrcode.vue";
+import { ElMessage } from 'element-plus'
 
 const cloud = new Cloud({
   baseUrl: "https://jyf6wk.laf.dev",
@@ -20,25 +22,66 @@ const centerDialogVisible = ref(false);
 const centerDialogVisible2 = ref(false);
 const phone = ref("");
 const code = ref("");
+const codebut = ref(false);
+const err = ref(false);
+const indexUp = ref(0);
+const upCode = ref(false);
+const content = ref("发送验证码");
+const totalTime = ref(60);
+const canClick = ref(true);
+const tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
 
 
-async function getCode(){
-   const res =  await cloud.invoke('getCode',{phone})
-    console.log(res);
+
+async function getCode() {
+  
+  if (!tel.test(phone.value)) return (err.value = true);
+  if(codebut.value) return
+  const res = await cloud.invoke("getCode", { phone: phone.value });
+  console.log(res);
+  console.log("123");
+  countDown();
 }
 
 
+function countDown() {
+  if (!canClick.value) return; //改动的是这两行代码
+  codebut.value = true;
+  canClick.value = false;
+  content.value = totalTime.value + "s后重新发送";
+  let clock = window.setInterval(() => {
+    totalTime.value--;
+    content.value = totalTime.value + "s后重新发送";
+    if (totalTime.value < 0) {
+      window.clearInterval(clock);
+      content.value = "重新发送验证码";
+      totalTime.value = 60;
+      canClick.value = true; //这里重新开启
+      codebut.value = false
+    }
+  }, 1000);
+}
+
+async function login() {
+  const res = await cloud.invoke("login", { phone: phone.value, code: code.value });
+  console.log(res);
+  if (res.code === 1) {
+    localStorage.setItem("access_token", res.data.access_token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
+    success()
+    centerDialogVisible2.value = false
+  }
+
+}
+
 async function send() {
   if (loading.value) return;
-
   list.value.push({
     text: question.value,
     avatar: "/avatar.png",
   });
 
-
   setScreen();
-
   const message = question.value;
   question.value = "";
   loading.value = true;
@@ -86,10 +129,40 @@ async function send() {
   setScreen();
 }
 
+//定位页面位置
 function setScreen() {
   setTimeout(() => {
     window.scrollTo(0, document.body.scrollHeight);
   }, 0);
+}
+
+function close() {
+  err.value = false;
+}
+
+function select(e) {
+  indexUp.value = e;
+}
+
+function openCode() {
+  centerDialogVisible.value = false;
+  upCode.value = true;
+}
+
+
+const success = () => {
+  ElMessage({
+    message: '登录成功',
+    type: 'success',
+  })
+}
+
+
+//判断是否登录
+function judge(){
+  const access_token = localStorage.getItem('access_token')
+  if(access_token) return success("")
+  centerDialogVisible2.value = true
 }
 </script>
 
@@ -107,7 +180,7 @@ function setScreen() {
 
           <el-button @click="centerDialogVisible = true">会员</el-button>
 
-          <el-button @click="centerDialogVisible2 = true">
+          <el-button @click="judge">
             <el-icon style="vertical-align: middle">
               <User />
             </el-icon>
@@ -116,51 +189,96 @@ function setScreen() {
         </el-col>
       </div>
     </el-row>
-    <div style="height: 50px"></div>
+    <div style="height: 52px"></div>
 
     <el-dialog
       modal="true"
       v-model="centerDialogVisible"
-      title="Plus会员"
+      title="充值"
       width="50%"
       height="50%"
       center
     >
       <div class="cardbox">
-        <el-card class="box-card"> 20次 </el-card>
-        <el-card class="box-card"> 20次 </el-card>
+        <el-card @click="select(0)" :class="indexUp === 0 ? 'box-card' : 'boxCard'">
+          <div class="useNumber">20次</div>
+          <div class="money">
+            <span class="sign">￥</span>
+            <span class="number">1</span>
+          </div>
+        </el-card>
+        <el-card
+          @click="select(1)"
+          :class="indexUp === 1 ? 'box-card' : 'boxCard'"
+          class="box-card"
+        >
+          <div class="useNumber">100次</div>
+          <div class="money">
+            <span class="sign">￥</span>
+            <span class="number">10</span>
+          </div>
+        </el-card>
+      </div>
+      <div class="cheerbox">
+        <el-button @click="openCode" class="cheer" type="warning">充值</el-button>
       </div>
 
       <template #footer> </template>
     </el-dialog>
 
-    <el-dialog
-      modal="true"
-      v-model="centerDialogVisible2"
-      title="登录"
-      center
-      width="30%"
-    >
-      <div class="accountbox">
-        <div class="inputname">手机号：</div>
-        <el-input
-          class="elinput"
-          type="number"
-          v-model="phone"
-          placeholder="请输入手机号"
-        />
+    <el-dialog modal="true" v-model="upCode" width="50%" height="50%" center>
+      <div class="qrcode">
+        <qrcode-vue value="abc" :size="300" level="H" />
       </div>
+      <template #footer> </template>
+    </el-dialog>
 
-      <div class="accountbox">
-        <div class="inputname">验证码：</div>
+    <el-dialog modal="true" v-model="centerDialogVisible2" title="登录" center>
+      <el-alert
+        @close="close"
+        v-show="err"
+        title="请输入正确的手机号码"
+        type="error"
+        center
+        show-icon
+      />
+      <div style="height: 200px">
+        <div class="accountbox">
+          <div class="inputname">手机号：</div>
+          <el-input
+            class="elinput"
+            size="small"
+            type="number"
+            v-model="phone"
+            placeholder="请输入手机号"
+          />
+        </div>
 
-        <el-input class="elinputcode" v-model="code" placeholder="请输入验证码" show-password />
-        <el-button @click="getCode" type="primary"  class="codebut">发送验证码</el-button>
-      </div>
+        <div class="accountbox">
+          <div class="inputname">验证码：</div>
 
+          <el-input
+            class="elinputcode"
+            size="small"
+            v-model="code"
+            placeholder="请输入验证码"
+          />
+        </div>
 
-      <div class="loginbutbox">
-        <el-button   class="loginbut">登录</el-button>
+        <div class="loginbutbox">
+          <el-button
+            @click="getCode"
+            type="primary"
+            style="margin-top: 10px"
+            class="loginbut"
+            >{{ content }}</el-button
+          >
+
+        </div>
+
+        <div class="loginbutbox">
+          <el-button @click="login" class="loginbut">登录</el-button>
+        </div>
       </div>
 
       <template #footer> </template>
@@ -168,8 +286,6 @@ function setScreen() {
 
     <div class="begintitle">
       <h1 v-show="!list.length" @click="send">左风的ChatGPT</h1>
-      <h2>免费额度用完了，我正在充值，大家可以先加一下群</h2>
-      <img src="../../public/wx.png" alt="" />
     </div>
 
     <div id="myList">
@@ -261,8 +377,15 @@ function setScreen() {
         <p>对2021年后的世界和事件的了解有限</p>
       </div>
     </div>
-    <div class="steppingstone"></div>
+    <div class="steppingstone">
+    </div>
 
+
+
+
+    <div class="amount">
+      剩余100
+    </div>
     <div class="inputbox">
       <input
         v-bind:readonly="loading"
@@ -301,6 +424,7 @@ function setScreen() {
         </div>
       </div>
     </div>
+  
   </div>
 </template>
 
@@ -434,6 +558,17 @@ function setScreen() {
   height: 160px;
 }
 
+.amount{
+  position: absolute;
+  bottom: 80px;
+  right: 0px;
+  width: 130px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 15px;
+  text-align: center;
+}
+
 .begintitle {
   width: 100%;
   display: flex;
@@ -502,34 +637,86 @@ textarea {
   width: auto;
   margin: 20px;
   width: 160px;
-  height: 180px;
+  height: 140px;
+  border: 1px solid;
+  border-image: linear-gradient(orange, rgb(224, 72, 72)) 30 30;
+}
+
+.boxCard {
+  width: auto;
+  margin: 20px;
+  width: 160px;
+  height: 140px;
+  border: 1px solid;
+  border-image: linear-gradient(#fff, #fff) 30 30;
+}
+
+.useNumber {
+  width: 50%;
+  height: 30px;
+  margin: auto;
+  text-align: center;
+  font-size: 20px;
+}
+.money {
+  width: 50%;
+  height: 80px;
+  line-height: 80px;
+  margin: auto;
+  text-align: center;
+}
+.sign {
+  font-size: 16px;
+  background-image: linear-gradient(to right, orange, rgb(255, 255, 255));
+  color: transparent;
+  background-clip: text;
+}
+.number {
+  font-size: 28px;
+  font-weight: 700;
+  background-image: linear-gradient(to right, orange, rgb(199, 61, 6));
+  color: transparent;
+  background-clip: text;
 }
 .accountbox {
   margin: auto;
   margin-top: 10px;
   display: flex;
 }
-.inputname {
-  width: 80px;
+.cheerbox {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: right;
 }
-.elinput{
-  width: 400px;
-}
-.elinputcode{
+.qrcode {
+  margin: auto;
   width: 300px;
 }
-.codebut{
-  height: 40px;
+.cheer {
+  width: 100px;
+  height: 50px;
 }
-.loginbutbox{
+
+.loginbutbox {
   margin: auto;
   margin-top: 20px;
   width: 120px;
   height: 40px;
+  line-height: 40px;
 }
-.loginbut{
+.loginbut {
   width: 120px;
   height: 40px;
+}
+
+.inputname {
+  width: 80px;
+  line-height: 40px;
+}
+
+:deep(.el-dialog__body) {
+  padding: 0;
 }
 
 @media screen and (max-width: 600px) {
@@ -543,6 +730,19 @@ textarea {
   }
   .dialog {
     width: 100%;
+  }
+  :deep(.el-dialog) {
+    width: 100%;
+  }
+  .head {
+    justify-content: center;
+  }
+  .useNumber {
+    width: 100%;
+  }
+  .money {
+    width: 100%;
+    text-align: center;
   }
 }
 </style>

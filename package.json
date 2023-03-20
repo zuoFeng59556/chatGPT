@@ -13,6 +13,7 @@
     "highlight.js": "^11.7.0",
     "laf-client-sdk": "^1.0.0-beta.2",
     "marked": "^4.2.12",
+    "qrcode.vue": "^3.3.4",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
