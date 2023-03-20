@@ -235,7 +235,7 @@ function judgeUp() {
       <div>
         <el-col :span="24">
           <el-popover placement="bottom" :width="300" trigger="click">
-            <el-image style="width: 100%; height: 100%" :src="wx" :fit="contain" />
+            <el-image style="width: 100%; height: 100%" :src="wx"  />
             <template #reference>
               <el-button class="m-2">微信群</el-button>
             </template>
@@ -255,7 +255,6 @@ function judgeUp() {
     <div style="height: 52px"></div>
 
     <el-dialog
-      modal="true"
       v-model="centerDialogVisible"
       title="充值"
       width="50%"
@@ -289,14 +288,14 @@ function judgeUp() {
       <template #footer> </template>
     </el-dialog>
 
-    <el-dialog modal="true" v-model="upCode" width="50%" height="50%" center>
+    <el-dialog  v-model="upCode" width="50%" height="50%" center>
       <div class="qrcode">
         <qrcode-vue :value="codeUrl" :size="300" level="H" />
       </div>
       <template #footer> </template>
     </el-dialog>
 
-    <el-dialog modal="true" v-model="centerDialogVisible2" title="登录" center>
+    <el-dialog  v-model="centerDialogVisible2" title="登录" center>
       <el-alert
         @close="close"
         v-show="err"
@@ -347,7 +346,7 @@ function judgeUp() {
     </el-dialog>
 
     <div class="begintitle">
-      <h1 v-show="!list.length">左风的ChatGPT</h1>
+      <h1 v-show="!list.length" style="font-family:Cursive">左风的ChatGPT</h1>
     </div>
 
     <div id="myList">
@@ -363,83 +362,28 @@ function judgeUp() {
     </div>
 
     <div v-show="!list.length" class="exhibition">
-      <div class="witem">
-        <svg
-          class="w-6 h-6 m-auto"
-          fill="none"
-          height="1em"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" x2="12" y1="1" y2="3"></line>
-          <line x1="12" x2="12" y1="21" y2="23"></line>
-          <line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
-          <line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
-          <line x1="1" x2="3" y1="12" y2="12"></line>
-          <line x1="21" x2="23" y1="12" y2="12"></line>
-          <line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
-          <line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
-        </svg>
-        <h3 class="title">实例</h3>
-        <p>"用简单的术语解释量子计算"</p>
-        <p>"10岁的生日有什么创意吗？"</p>
-        <p>"如何在Javascript中提出HTTP请求？"</p>
-      </div>
+        <p style="font-family:Cursive;font-size: 25px;">大家好，我已经申请外境外信用卡续费了，但是不能免费给大家使用了，这几天已经消耗了六七十美金， 是在是贴不起。
 
-      <div class="witem">
-        <svg
-          aria-hidden="true"
-          class="w-6 h-6 m-auto"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></path>
-        </svg>
-        <h3 class="title">功能</h3>
-        <p>还记得用户在对话中早些时候说的话</p>
-        <p>允许用户提供后续更正</p>
-        <p>接受过拒绝不当请求的培训</p>
-      </div>
+下面我说一下官方计费的方式，官方 API 的计费方式是通过 token ，token 呢又对应英文单词数量（翻译成中文还不知道怎么对应），而且附带上下文，举个栗子，你问两句话，他回你两句每一句都是 20 个单词，按理说应该计费40个单词，但是因为有上下文的关系，所以算下来是40 + 20 = 60个，上下文越多，就是倍数增长？还是指数增长？所以建议大家如果问题问完了，就刷新一下再开始下一个问题，减少连续提问，减少消耗。
 
-      <div class="witem">
-        <svg
-          class="w-6 h-6 m-auto"
-          fill="none"
-          height="1em"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-          ></path>
-          <line x1="12" x2="12" y1="9" y2="13"></line>
-          <line x1="12" x2="12.01" y1="17" y2="17"></line>
-        </svg>
-        <h3 class="title">限制</h3>
-        <p>偶尔可能会生成错误的信息</p>
-        <p>偶尔可能会产生有害的指令或有偏见的内容</p>
-        <p>对2021年后的世界和事件的了解有限</p>
-      </div>
+所以付费的方式很难计算（而且是绑定信用卡，先用后付钱），我只能粗略的按条计算也就是按照提问的次数，我暂时定的是 1 块钱 20次，新用户注册就免费用一块钱的，等大家用一段时间我看看能不能 cover 成本，如果不够可能还需要提提价格，如果够了多出一点，就给我买鸭腿吃（杭州鸭腿10块钱一个），如果多出太多我会调低价格。  
+
+我的成本： 官方 API 费用 + 信用卡月费 + 买虚拟货币转美元手续费 + 信用卡充值手续费 + 境外服务器费用 + 我每天吃鸭腿饭费用。
+
+后续计划：
+1.优化 ui 和交互，使用起来更舒适。
+2.增加选角色功能，让大家能用最少的话解决问题。
+3.增加详细的使用教程，让大家的使用的更高效，更好的提高工作效率，   能早点下班陪陪家人 ，提高学习效率，让学习更轻松，更愉快。
+
+为什么不接入广告免费？
+答：我不喜欢
+为什么不搞邀请送次数？
+答：我不喜欢
+为什么要做这个？
+答：我喜欢
+
+雷军：“让每个人都能享受科技带来的美好生活”。</p>
     </div>
-    <div class="steppingstone"></div>
 
     <div class="inputbox">
       <el-input
@@ -595,9 +539,10 @@ function judgeUp() {
 }
 
 .amount {
-  width: 60px;
+  margin: 5px;
+  width: 100px;
   height: 40px;
-  line-height: 54px;
+  line-height: 44px;
   text-align: center;
   font-size: 16px;
   color: #606266;
@@ -673,8 +618,8 @@ textarea {
   margin: 20px;
   width: 160px;
   height: 140px;
-  border: 1px solid;
-  border-image: linear-gradient(orange, rgb(224, 72, 72)) 30 30;
+  border: 1px solid #e6a23c;
+  box-shadow: 0 16rpx 16rpx rgba(10, 16, 20, 0.24), 0 0 16rpx rgba(10, 16, 20, 0.12);
 }
 
 .boxCard {
@@ -682,8 +627,9 @@ textarea {
   margin: 20px;
   width: 160px;
   height: 140px;
-  border: 1px solid;
-  border-image: linear-gradient(#fff, #fff) 30 30;
+  border: 1px solid  #fff;
+  box-shadow: 0 16rpx 16rpx rgba(10, 16, 20, 0.24), 0 0 16rpx rgba(10, 16, 20, 0.12);
+
 }
 
 .useNumber {
@@ -702,16 +648,13 @@ textarea {
 }
 .sign {
   font-size: 16px;
-  background-image: linear-gradient(to right, orange, rgb(255, 255, 255));
-  color: transparent;
-  background-clip: text;
+  color: #e6a23c;
 }
 .number {
   font-size: 28px;
   font-weight: 700;
-  background-image: linear-gradient(to right, orange, rgb(199, 61, 6));
-  color: transparent;
-  background-clip: text;
+  color: #e6a23c;
+
 }
 .accountbox {
   margin: auto;
@@ -776,6 +719,18 @@ textarea {
   .money {
     width: 100%;
     text-align: center;
+  }
+  .head{
+  padding: 0px 5px;
+  }
+  .amount{
+  margin: 5px;
+  width: 70px;
+  height: 40px;
+  line-height: 44px;
+  text-align: center;
+  font-size: 12px;
+  color: #606266;
   }
 }
 </style>
