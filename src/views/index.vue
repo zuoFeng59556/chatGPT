@@ -235,7 +235,7 @@ function judgeUp() {
       <div>
         <el-col :span="24">
           <el-popover placement="bottom" :width="300" trigger="click">
-            <el-image style="width: 100%; height: 100%" :src="wx"  />
+            <el-image style="width: 100%; height: 100%" :src="wx" />
             <template #reference>
               <el-button class="m-2">微信群</el-button>
             </template>
@@ -254,13 +254,7 @@ function judgeUp() {
     </el-row>
     <div style="height: 52px"></div>
 
-    <el-dialog
-      v-model="centerDialogVisible"
-      title="充值"
-      width="50%"
-      height="50%"
-      center
-    >
+    <el-dialog v-model="centerDialogVisible" title="充值" width="50%" height="50%" center>
       <div class="cardbox">
         <el-card @click="select(0)" :class="indexUp === 0 ? 'box-card' : 'boxCard'">
           <div class="useNumber">200次</div>
@@ -288,14 +282,14 @@ function judgeUp() {
       <template #footer> </template>
     </el-dialog>
 
-    <el-dialog  v-model="upCode" width="50%" height="50%" center>
+    <el-dialog v-model="upCode" width="50%" height="50%" center>
       <div class="qrcode">
         <qrcode-vue :value="codeUrl" :size="300" level="H" />
       </div>
       <template #footer> </template>
     </el-dialog>
 
-    <el-dialog  v-model="centerDialogVisible2" title="登录" center>
+    <el-dialog v-model="centerDialogVisible2" title="登录" center>
       <el-alert
         @close="close"
         v-show="err"
@@ -346,7 +340,7 @@ function judgeUp() {
     </el-dialog>
 
     <div class="begintitle">
-      <h1 v-show="!list.length" style="font-family:Cursive">左风的ChatGPT</h1>
+      <h1 v-show="!list.length" style="font-family: Cursive">左风的ChatGPT</h1>
     </div>
 
     <div id="myList">
@@ -362,18 +356,20 @@ function judgeUp() {
     </div>
 
     <div v-show="!list.length" class="exhibition">
-        <p style="font-family:Cursive;font-size: 25px;">大家好，我已经申请外境外信用卡续费了，但是不能免费给大家使用了，这几天已经消耗了六七十美金， 是在是贴不起。
+      <pre class="pre">
+          
+  大家好，我已经申请外境外信用卡续费了，但是不能免费给大家使用了，这几天已经消耗了六七十美金， 是在是贴不起。
 
-下面我说一下官方计费的方式，官方 API 的计费方式是通过 token ，token 呢又对应英文单词数量（翻译成中文还不知道怎么对应），而且附带上下文，举个栗子，你问两句话，他回你两句每一句都是 20 个单词，按理说应该计费40个单词，但是因为有上下文的关系，所以算下来是40 + 20 = 60个，上下文越多，就是倍数增长？还是指数增长？所以建议大家如果问题问完了，就刷新一下再开始下一个问题，减少连续提问，减少消耗。
+  下面我说一下官方计费的方式，官方 API 的计费方式是通过 token ，token 呢又对应英文单词数量（翻译成中文还不知道怎么对应），而且附带上下文，举个栗子，你问两句话，他回你两句每一句都是 20 个单词，按理说应该计费40个单词，但是因为有上下文的关系，所以算下来是40 + 20 = 60个，上下文越多，就是倍数增长？还是指数增长？所以建议大家如果问题问完了，就刷新一下再开始下一个问题，减少连续提问，减少消耗。
 
-所以付费的方式很难计算（而且是绑定信用卡，先用后付钱），我只能粗略的按条计算也就是按照提问的次数，我暂时定的是 1 块钱 20次，新用户注册就免费用一块钱的，等大家用一段时间我看看能不能 cover 成本，如果不够可能还需要提提价格，如果够了多出一点，就给我买鸭腿吃（杭州鸭腿10块钱一个），如果多出太多我会调低价格。  
+  所以付费的方式很难计算（而且是绑定信用卡，先用后付钱），我只能粗略的按条计算也就是按照提问的次数，我暂时定的是 1 块钱 20次，新用户注册就免费用一块钱的，等大家用一段时间我看看能不能 cover 成本，如果不够可能还需要提提价格，如果够了多出一点，就给我买鸭腿吃（杭州鸭腿10块钱一个），如果多出太多我会调低价格。  
 
-我的成本： 官方 API 费用 + 信用卡月费 + 买虚拟货币转美元手续费 + 信用卡充值手续费 + 境外服务器费用 + 我每天吃鸭腿饭费用。
+  我的成本： 官方 API 费用 + 信用卡月费 + 买虚拟货币转美元手续费 + 信用卡充值手续费 + 境外服务器费用 + 我每天吃鸭腿饭费用。
 
 后续计划：
 1.优化 ui 和交互，使用起来更舒适。
 2.增加选角色功能，让大家能用最少的话解决问题。
-3.增加详细的使用教程，让大家的使用的更高效，更好的提高工作效率，   能早点下班陪陪家人 ，提高学习效率，让学习更轻松，更愉快。
+3.增加详细的使用教程，让大家的使用的更高效，更好的提高工作效率，能早点下班陪陪家人 ，提高学习效率，让学习更轻松，更愉快。
 
 为什么不接入广告免费？
 答：我不喜欢
@@ -382,7 +378,9 @@ function judgeUp() {
 为什么要做这个？
 答：我喜欢
 
-雷军：“让每个人都能享受科技带来的美好生活”。</p>
+雷军：“让每个人都能享受科技带来的美好生活”。
+        </pre
+      >
     </div>
 
     <div class="inputbox">
@@ -396,28 +394,28 @@ function judgeUp() {
         placeholder="输入你的指令"
       />
 
-        <div class="btn-send" @click="send">
-          <div class="send-view" style="display: flex">
-            <svg
-              stroke="currentColor"
-              fill="none"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-4 w-4 mr-1"
-              height="1.5em"
-              width="1.5em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </div>
-          <div class="send-loading" style="display: none">
-            <div></div>
-            <div></div>
-            <div></div>
+      <div class="btn-send" @click="send">
+        <div class="send-view" style="display: flex">
+          <svg
+            stroke="currentColor"
+            fill="none"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-4 w-4 mr-1"
+            height="1.5em"
+            width="1.5em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </div>
+        <div class="send-loading" style="display: none">
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
       </div>
     </div>
@@ -508,6 +506,12 @@ function judgeUp() {
   align-items: center;
   background: #fff;
   border-radius: 8px;
+}
+.pre {
+  white-space: pre-wrap;
+  text-indent: 2em;
+  word-wrap: break-word;
+  padding: 0 0 10% 0;
 }
 
 .inputbox button {
@@ -627,9 +631,8 @@ textarea {
   margin: 20px;
   width: 160px;
   height: 140px;
-  border: 1px solid  #fff;
+  border: 1px solid #fff;
   box-shadow: 0 16rpx 16rpx rgba(10, 16, 20, 0.24), 0 0 16rpx rgba(10, 16, 20, 0.12);
-
 }
 
 .useNumber {
@@ -654,7 +657,6 @@ textarea {
   font-size: 28px;
   font-weight: 700;
   color: #e6a23c;
-
 }
 .accountbox {
   margin: auto;
@@ -720,17 +722,17 @@ textarea {
     width: 100%;
     text-align: center;
   }
-  .head{
-  padding: 0px 5px;
+  .head {
+    padding: 0px 5px;
   }
-  .amount{
-  margin: 5px;
-  width: 70px;
-  height: 40px;
-  line-height: 44px;
-  text-align: center;
-  font-size: 12px;
-  color: #606266;
+  .amount {
+    margin: 5px;
+    width: 70px;
+    height: 40px;
+    line-height: 44px;
+    text-align: center;
+    font-size: 12px;
+    color: #606266;
   }
 }
 </style>
