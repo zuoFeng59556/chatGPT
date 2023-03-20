@@ -1,7 +1,15 @@
 # chatGPT
 基于 laf 开发的 chatGPT 免费 免登录 免翻墙 点击开聊   
 在线地址 https://jyf6wk-chat-gpt.site.laf.dev    
-如何开发属于自己的 chatGPT ？ 参考 [三分钟拥有自己的 ChatGPT (从开发到上线)](https://zuofeng59556.github.io/my-blog/pages/quickStart/chatGPT/)
+如何开发属于自己的 chatGPT ？ 参考 [三分钟拥有自己的 ChatGPT (从开发到上线)](https://zuofeng59556.github.io/my-blog/pages/quickStart/chatGPT/) 
+
+
+### 免费额度用完了，我正在充值，大家先加一下群   
+
+
+
+<img width="315" alt="wx-77aeabbd" src="https://user-images.githubusercontent.com/82700206/226231901-efd91888-f3d1-4c78-8122-aea864e42b5f.png">
+
 
 ## 运行项目
 ```
