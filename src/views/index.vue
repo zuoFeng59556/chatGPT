@@ -42,6 +42,7 @@ getAmount();
 
 // 获取用户剩余次数
 async function getAmount() {
+  if (!localStorage.getItem("access_token")) return;
   const res = await cloud.invoke("get-amount");
   amount.value = res.amount;
 }
@@ -50,8 +51,6 @@ async function getCode() {
   if (!tel.test(phone.value)) return (err.value = true);
   if (codebut.value) return;
   const res = await cloud.invoke("getCode", { phone: phone.value });
-  console.log(res);
-  console.log("123");
   countDown();
 }
 
@@ -211,14 +210,28 @@ const success = () => {
 //判断是否登录
 function judge() {
   const access_token = localStorage.getItem("access_token");
-  if (access_token) return success("");
+  if (access_token)
+    return ElMessage({
+      message: "您已经登录过了",
+      type: "success",
+    });
   centerDialogVisible2.value = true;
+}
+
+function judgeUp() {
+  if (!localStorage.getItem("access_token"))
+    return ElMessage({
+      message: "请登录",
+      type: "error",
+    });
+  centerDialogVisible.value = true;
 }
 </script>
 
 <template>
   <div class="page">
     <el-row class="head">
+      <div class="amount">剩余{{ amount }}</div>
       <div>
         <el-col :span="24">
           <el-popover placement="bottom" :width="300" trigger="click">
@@ -228,7 +241,7 @@ function judge() {
             </template>
           </el-popover>
 
-          <el-button @click="centerDialogVisible = true">充值</el-button>
+          <el-button @click="judgeUp">充值</el-button>
 
           <el-button @click="judge">
             <el-icon style="vertical-align: middle">
@@ -334,7 +347,7 @@ function judge() {
     </el-dialog>
 
     <div class="begintitle">
-      <h1 v-show="!list.length" @click="send">左风的ChatGPT</h1>
+      <h1 v-show="!list.length">左风的ChatGPT</h1>
     </div>
 
     <div id="myList">
@@ -428,42 +441,39 @@ function judge() {
     </div>
     <div class="steppingstone"></div>
 
-    <div class="amount">剩余{{ amount }}</div>
     <div class="inputbox">
-      <input
-        v-bind:readonly="loading"
-        @keyup.enter="send"
-        tabindex="0"
-        data-id="root"
-        rows="1"
+      <el-input
         v-model="question"
-        type="text"
-        id="message"
+        v-bind:readonly="loading"
+        maxlength="500"
+        tabindex="0"
+        :autosize="{ minRows: 1, maxRows: 5 }"
+        type="textarea"
         placeholder="输入你的指令"
-        maxlength="100"
       />
-      <div class="btn-send" id="submit-btn" @click="send">
-        <div class="send-view" style="display: flex">
-          <svg
-            stroke="currentColor"
-            fill="none"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="h-4 w-4 mr-1"
-            height="1.5em"
-            width="1.5em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </div>
-        <div class="send-loading" style="display: none">
-          <div></div>
-          <div></div>
-          <div></div>
+
+        <div class="btn-send" @click="send">
+          <div class="send-view" style="display: flex">
+            <svg
+              stroke="currentColor"
+              fill="none"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4 mr-1"
+              height="1.5em"
+              width="1.5em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </div>
+          <div class="send-loading" style="display: none">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
       </div>
     </div>
@@ -552,24 +562,8 @@ function judge() {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  padding-right: 12px;
   background: #fff;
   border-radius: 8px;
-}
-
-.inputbox input {
-  flex-grow: 1;
-  height: 44px;
-  max-height: 100px;
-  border: 0;
-  outline: none;
-  padding: 12px 15px;
-  background: transparent;
-  font-size: 16px;
-  width: 100%;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.7);
 }
 
 .inputbox button {
@@ -601,14 +595,12 @@ function judge() {
 }
 
 .amount {
-  position: fixed;
-  bottom: 80px;
-  right: 0px;
-  width: 130px;
+  width: 60px;
   height: 40px;
-  line-height: 40px;
-  border-radius: 15px;
+  line-height: 54px;
   text-align: center;
+  font-size: 16px;
+  color: #606266;
 }
 
 .begintitle {
@@ -777,9 +769,7 @@ textarea {
   :deep(.el-dialog) {
     width: 100%;
   }
-  .head {
-    justify-content: center;
-  }
+
   .useNumber {
     width: 100%;
   }
