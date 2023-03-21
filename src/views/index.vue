@@ -33,10 +33,20 @@ const canClick = ref(true);
 const amount = ref(0);
 const codeUrl = ref("");
 const payOrder = ref("");
+const isMobile = ref(false);
 const tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
 
 //======================================created======================================
 getAmount();
+
+// 判断是否为移动设备
+if (
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
+) {
+  isMobile.value = true;
+}
 
 //======================================function======================================
 
@@ -197,6 +207,12 @@ async function checkPay() {
     setTimeout(() => {
       checkPay();
     }, 1000);
+  }
+}
+
+function handleEnter(e) {
+  if (e.key === "Enter" && !isMobile.value && !e.shiftKey) {
+    send();
   }
 }
 
@@ -364,11 +380,12 @@ function judgeUp() {
       <el-input
         v-model="question"
         v-bind:readonly="loading"
-        maxlength="500"
+        maxlength="1000"
         tabindex="0"
         :autosize="{ minRows: 1, maxRows: 5 }"
         type="textarea"
         placeholder="输入你的指令"
+        @keypress="handleEnter"
       />
 
       <div class="btn-send" @click="send">
