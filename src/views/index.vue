@@ -15,29 +15,52 @@ const cloud = new Cloud({
 });
 
 //======================================data======================================
+//消息列表
 const list = ref([]);
+//输入框绑定消息
 const question = ref("");
+//判断消息是否为空
 const parentMessageId = ref("");
+//获取消息loading
 const loading = ref(false);
+//充值dialog
 const centerDialogVisible = ref(false);
+//登录dialog
 const centerDialogVisible2 = ref(false);
+//手机号
 const phone = ref("");
+//验证码
 const code = ref("");
+//判断是否还在倒计时
 const codebut = ref(false);
+//手机号码错误弹出框
 const err = ref(false);
+//充值选项
 const indexUp = ref(0);
+//二维码展示dialog
 const upCode = ref(false);
+//发送验证码
 const content = ref("发送验证码");
+//验证码倒计时
 const totalTime = ref(60);
+//获取验证码按钮日否可以点击
 const canClick = ref(true);
+//用户剩余次数
 const amount = ref(0);
+//二维码链接
 const codeUrl = ref("");
+//订单号
 const payOrder = ref("");
+//判断设备
 const isMobile = ref(false);
+//输入框提示
 const placeholder = ref("输入你的指令");
+//验证手机号
 const tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
 
 //======================================created======================================
+
+// 获取用户剩余次数
 getAmount();
 
 // 判断是否为移动设备
@@ -60,6 +83,7 @@ async function getAmount() {
   amount.value = res.amount;
 }
 
+//获取验证码
 async function getCode() {
   if (!tel.test(phone.value)) return (err.value = true);
   if (codebut.value) return;
@@ -67,8 +91,9 @@ async function getCode() {
   countDown();
 }
 
+//验证码倒计时
 function countDown() {
-  if (!canClick.value) return; //改动的是这两行代码
+  if (!canClick.value) return; 
   codebut.value = true;
   canClick.value = false;
   content.value = totalTime.value + "s后重新发送";
@@ -85,6 +110,7 @@ function countDown() {
   }, 1000);
 }
 
+//验证登录
 async function login() {
   const res = await cloud.invoke("login", { phone: phone.value, code: code.value });
   console.log(res);
@@ -102,25 +128,27 @@ async function login() {
   }
 }
 
+//发送消息
 async function send() {
+  //发送时验证登录
   if (localStorage.getItem("access_token") == null)
     return ElMessage({
       message: "请先登录！",
       type: "error",
     });
-
+  //判断用户次数
   if (amount.value <= 0)
     return ElMessage({
       message: "您的剩余次数不足，请充值！",
       type: "error",
     });
-
+  //判断是否回复
   if (loading.value) return;
   list.value.push({
     text: question.value,
     avatar: "/avatar.png",
   });
-
+  //定位页面位置
   setScreen();
   const message = question.value;
   question.value = "";
@@ -177,14 +205,17 @@ function setScreen() {
   }, 0);
 }
 
+//验证手机号码弹出框
 function close() {
   err.value = false;
 }
 
+//判断用户选择项
 function select(e) {
   indexUp.value = e;
 }
 
+//点击充值
 async function openCode() {
   let num = 0;
   if (indexUp.value == 0) num = 1000;
@@ -197,6 +228,7 @@ async function openCode() {
   checkPay();
 }
 
+//验证用户是否付款
 async function checkPay() {
   const res = await cloud.invoke("check-pay-ordet", { order: payOrder.value });
   if (res.code == 1) {
@@ -213,12 +245,14 @@ async function checkPay() {
   }
 }
 
+//发送消息适配PC或phone
 function handleEnter(e) {
   if (e.key === "Enter" && !isMobile.value && !e.shiftKey) {
     send();
   }
 }
 
+//消息弹出框
 const success = () => {
   ElMessage({
     message: "登录成功",
@@ -237,6 +271,7 @@ function judge() {
   centerDialogVisible2.value = true;
 }
 
+//登录后可点击充值
 function judgeUp() {
   if (!localStorage.getItem("access_token"))
     return ElMessage({
@@ -249,18 +284,22 @@ function judgeUp() {
 
 <template>
   <div class="page">
+    <!-- 头部 -->
     <el-row class="head">
       <div class="amount">剩余{{ amount }}</div>
       <div>
         <el-col :span="24">
+          <!-- ------------------------------------------ -->
           <el-popover placement="bottom" :width="300" trigger="click">
             <el-image style="width: 100%; height: 100%" :src="wx" />
             <template #reference>
               <el-button class="m-2">微信群</el-button>
             </template>
           </el-popover>
+          <!-- ------------------------------------------ -->
 
           <el-button @click="judgeUp">充值</el-button>
+          <!-- ------------------------------------------ -->
 
           <el-button @click="judge">
             <el-icon style="vertical-align: middle">
@@ -268,13 +307,18 @@ function judgeUp() {
             </el-icon>
             <span style="vertical-align: middle">登录</span>
           </el-button>
+          <!-- ------------------------------------------ -->
         </el-col>
       </div>
     </el-row>
+
+    <!-- 占位 -->
     <div style="height: 52px"></div>
 
+    <!-- 充值弹出框 -->
     <el-dialog v-model="centerDialogVisible" title="充值" width="50%" height="50%" center>
       <div class="cardbox">
+        <!-- --------------------------------------------------------------- -->
         <el-card @click="select(0)" :class="indexUp === 0 ? 'box-card' : 'boxCard'">
           <div class="useNumber">200次</div>
           <div class="money">
@@ -282,6 +326,9 @@ function judgeUp() {
             <span class="number">10</span>
           </div>
         </el-card>
+
+        <!-- --------------------------------------------------------------- -->
+
         <el-card
           @click="select(1)"
           :class="indexUp === 1 ? 'box-card' : 'boxCard'"
@@ -294,13 +341,14 @@ function judgeUp() {
           </div>
         </el-card>
       </div>
+      <!-- ----------------------------------------------------- -->
       <div class="cheerbox">
         <el-button @click="openCode" class="cheer" type="warning">充值</el-button>
       </div>
-
       <template #footer> </template>
     </el-dialog>
 
+    <!-- 二维码弹出框 -->
     <el-dialog v-model="upCode" width="50%" height="50%" center>
       <div class="qrcode">
         <qrcode-vue :value="codeUrl" :size="300" level="H" />
@@ -309,6 +357,7 @@ function judgeUp() {
       <template #footer> </template>
     </el-dialog>
 
+    <!-- 登录弹出框 -->
     <el-dialog v-model="centerDialogVisible2" title="登录" center>
       <el-alert
         @close="close"
@@ -319,6 +368,7 @@ function judgeUp() {
         show-icon
       />
       <div style="height: 200px">
+        <!-- ----------------------------------------------------- -->
         <div class="accountbox">
           <div class="inputname">手机号：</div>
           <el-input
@@ -330,9 +380,10 @@ function judgeUp() {
           />
         </div>
 
+        <!-- ----------------------------------------------------- -->
+
         <div class="accountbox">
           <div class="inputname">验证码：</div>
-
           <el-input
             class="elinputcode"
             size="small"
@@ -340,6 +391,7 @@ function judgeUp() {
             placeholder="请输入验证码"
           />
         </div>
+        <!-- ----------------------------------------------------- -->
 
         <div class="loginbutbox">
           <el-button
@@ -350,19 +402,19 @@ function judgeUp() {
             >{{ content }}</el-button
           >
         </div>
-
         <div class="loginbutbox">
           <el-button @click="login" class="loginbut">登录</el-button>
         </div>
       </div>
-
       <template #footer> </template>
     </el-dialog>
 
+    <!-- ------------------------------------------------------------ -->
     <div class="begintitle">
       <h1 v-show="!list.length" style="font-family: Cursive">左风的智能机器人</h1>
     </div>
 
+    <!-- 页面消息列表 -->
     <div id="myList">
       <div :class="item.type === 0 ? 'problemList' : 'answerList'" v-for="item in list">
         <img class="listImg" :src="item.avatar" alt="" />
@@ -375,10 +427,12 @@ function judgeUp() {
       </div>
     </div>
 
+    <!-- ------------------------------------------------------ -->
     <div v-show="!list.length" class="exhibition">
       <div>永远相信美好的事情即将发生</div>
     </div>
 
+    <!-- 输入框 -->
     <div class="inputbox">
       <el-input
         v-model="question"
@@ -391,6 +445,7 @@ function judgeUp() {
         @keypress="handleEnter"
       />
 
+      <!-- 发送按钮小飞机 -->
       <div class="btn-send" @click="send">
         <div class="send-view" style="display: flex">
           <svg
@@ -398,24 +453,21 @@ function judgeUp() {
             fill="none"
             stroke-width="2"
             viewBox="0 0 24 24"
-            stroke-linecap="round"
-            stroke-linejoin="round"
             class="h-4 w-4 mr-1"
             height="1.5em"
             width="1.5em"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <line x1="22" y1="2" x2="11" y2="13"></line>
             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
           </svg>
         </div>
-        <div class="send-loading" style="display: none">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+      </div>
+      <div class="sponsor">
+         <a href="https://laf.dev/" target="_blank">基于@laf云开发：https://laf.dev/</a>
       </div>
     </div>
+    
+    <!-- ----------------------------------------------- -->
   </div>
 </template>
 
@@ -512,7 +564,16 @@ function judgeUp() {
   word-wrap: break-word;
   padding: 0 0 10% 0;
 }
-
+.sponsor{
+  width: 50%;
+  text-align: center;
+  margin: auto;
+  cursor: pointer;
+  position: fixed;
+  bottom: 0px;
+  color: #606266;
+  font-size: 12px;
+}
 .inputbox button {
   margin-left: 15px;
   width: 56px;
@@ -739,5 +800,15 @@ textarea {
     font-size: 12px;
     color: #606266;
   }
+  .sponsor{
+  width: 90%;
+  text-align: center;
+  margin: auto;
+  cursor: pointer;
+  position: fixed;
+  bottom: 0px;
+  color: #606266;
+  font-size: 12px;
+}
 }
 </style>
