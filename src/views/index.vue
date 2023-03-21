@@ -436,6 +436,7 @@ function judgeUp() {
 #myList {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 0px 0 60px 0;
   overflow-x: hidden;
   overflow-y: auto;
 }
