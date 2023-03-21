@@ -34,6 +34,7 @@ const amount = ref(0);
 const codeUrl = ref("");
 const payOrder = ref("");
 const isMobile = ref(false);
+const placeholder = ref("输入你的指令");
 const tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
 
 //======================================created======================================
@@ -46,6 +47,8 @@ if (
   )
 ) {
   isMobile.value = true;
+} else {
+  placeholder.value = "输入你的指令（Shift + Enter = 换行,Enter = 发送）";
 }
 
 //======================================function======================================
@@ -384,7 +387,7 @@ function judgeUp() {
         tabindex="0"
         :autosize="{ minRows: 1, maxRows: 5 }"
         type="textarea"
-        placeholder="输入你的指令"
+        :placeholder="placeholder"
         @keypress="handleEnter"
       />
 
@@ -431,6 +434,7 @@ function judgeUp() {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 10px;
   width: 48px;
   height: 32px;
   border-radius: 6px;
