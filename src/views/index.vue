@@ -285,6 +285,7 @@ function judgeUp() {
     <el-dialog v-model="upCode" width="50%" height="50%" center>
       <div class="qrcode">
         <qrcode-vue :value="codeUrl" :size="300" level="H" />
+        <div class="qrcodeText">微信扫码支付</div>
       </div>
       <template #footer> </template>
     </el-dialog>
@@ -340,7 +341,7 @@ function judgeUp() {
     </el-dialog>
 
     <div class="begintitle">
-      <h1 v-show="!list.length" style="font-family: Cursive">左风的ChatGPT</h1>
+      <h1 v-show="!list.length" style="font-family: Cursive">左风的智能机器人</h1>
     </div>
 
     <div id="myList">
@@ -356,7 +357,7 @@ function judgeUp() {
     </div>
 
     <div v-show="!list.length" class="exhibition">
-      <h1>永远相信美好的事情即将发生</h1>
+      <div>永远相信美好的事情即将发生</div>
     </div>
 
     <div class="inputbox">
@@ -648,6 +649,12 @@ textarea {
 .qrcode {
   margin: auto;
   width: 300px;
+}
+.qrcodeText {
+  margin: 20px 0 0 0;
+  font-size: 20px;
+  width: 100%;
+  text-align: center;
 }
 .cheer {
   width: 100px;
