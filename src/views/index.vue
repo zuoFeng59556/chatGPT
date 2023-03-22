@@ -158,7 +158,7 @@ async function send() {
     loading.value = false;
     list.value.push({
       text: "问题不能为空！",
-      avatar: "/log.png",
+      avatar: "/logo.jpg",
     });
     setScreen();
     return;
@@ -177,7 +177,7 @@ async function send() {
     loading.value = false;
     list.value.push({
       text: "出错了，请重试！",
-      avatar: "/log.png",
+      avatar: "/logo.jpg",
     });
     setScreen();
     return;
@@ -185,12 +185,11 @@ async function send() {
 
   parentMessageId.value = res.id;
 
-  // res.text = res.text.replace(/\n/g, "<br>");
   res.text = marked.parse(res.text);
 
   list.value.push({
     text: res.text,
-    avatar: "/log.png",
+    avatar: "/logo.jpg",
   });
 
   loading.value = false;
@@ -437,7 +436,7 @@ function judgeUp() {
       </div>
 
       <div v-show="loading" class="answerList">
-        <img class="listImg" src="/log.png" alt="" />
+        <img class="listImg" src="/logo.jpg" alt="" />
         <img class="addin" src="/loading.gif" alt="" />
       </div>
     </div>
