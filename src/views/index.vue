@@ -802,14 +802,7 @@ textarea {
     color: #606266;
   }
   .sponsor {
-    width: 90%;
-    text-align: center;
-    margin: auto;
-    cursor: pointer;
-    position: fixed;
-    bottom: 0px;
-    color: #606266;
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 </style>
