@@ -93,7 +93,7 @@ async function getCode() {
 
 //验证码倒计时
 function countDown() {
-  if (!canClick.value) return; 
+  if (!canClick.value) return;
   codebut.value = true;
   canClick.value = false;
   content.value = totalTime.value + "s后重新发送";
@@ -412,6 +412,20 @@ function judgeUp() {
     <!-- ------------------------------------------------------------ -->
     <div class="begintitle">
       <h1 v-show="!list.length" style="font-family: Cursive">左风的智能机器人</h1>
+      <div class="sponsor">
+        <a href="https://laf.dev/" target="_blank">基于 laf 云开发：https://laf.dev/</a>
+      </div>
+      <div class="sponsor">此产品和 laf 达成深度合作，我们可以提供专业的私有化部署。</div>
+      <div class="sponsor">
+        如果您和您的公司需要私有化部署，点击
+        <a
+          style="color: #01a99d"
+          href="https://x85clg-wenjuan.site.laf.dev/#/pages/form/index?id=6412c9980ac642ce124ad116"
+          target="_blank"
+          >这里</a
+        >
+        留下您的信息，我们商务会在第一时间联系您。
+      </div>
     </div>
 
     <!-- 页面消息列表 -->
@@ -428,9 +442,6 @@ function judgeUp() {
     </div>
 
     <!-- ------------------------------------------------------ -->
-    <div v-show="!list.length" class="exhibition">
-      <div>永远相信美好的事情即将发生</div>
-    </div>
 
     <!-- 输入框 -->
     <div class="inputbox">
@@ -462,11 +473,8 @@ function judgeUp() {
           </svg>
         </div>
       </div>
-      <div class="sponsor">
-         <a href="https://laf.dev/" target="_blank">基于@laf云开发：https://laf.dev/</a>
-      </div>
     </div>
-    
+
     <!-- ----------------------------------------------- -->
   </div>
 </template>
@@ -564,15 +572,8 @@ function judgeUp() {
   word-wrap: break-word;
   padding: 0 0 10% 0;
 }
-.sponsor{
-  width: 50%;
-  text-align: center;
-  margin: auto;
-  cursor: pointer;
-  position: fixed;
-  bottom: 0px;
-  color: #606266;
-  font-size: 12px;
+.sponsor {
+  font-size: 18px;
 }
 .inputbox button {
   margin-left: 15px;
@@ -800,15 +801,15 @@ textarea {
     font-size: 12px;
     color: #606266;
   }
-  .sponsor{
-  width: 90%;
-  text-align: center;
-  margin: auto;
-  cursor: pointer;
-  position: fixed;
-  bottom: 0px;
-  color: #606266;
-  font-size: 12px;
-}
+  .sponsor {
+    width: 90%;
+    text-align: center;
+    margin: auto;
+    cursor: pointer;
+    position: fixed;
+    bottom: 0px;
+    color: #606266;
+    font-size: 12px;
+  }
 }
 </style>
