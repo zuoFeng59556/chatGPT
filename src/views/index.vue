@@ -410,8 +410,8 @@ function judgeUp() {
     </el-dialog>
 
     <!-- ------------------------------------------------------------ -->
-    <div class="begintitle">
-      <h1 v-show="!list.length" style="font-family: Cursive">左风的智能机器人</h1>
+    <div v-show="!list.length" class="begintitle">
+      <h1 style="font-family: Cursive">左风的智能机器人</h1>
       <div class="sponsor">
         <a href="https://laf.dev/" target="_blank">基于 laf 云开发：https://laf.dev/</a>
       </div>
