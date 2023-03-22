@@ -146,7 +146,7 @@ async function send() {
   if (loading.value) return;
   list.value.push({
     text: question.value,
-    avatar: "/avatar.png",
+    avatar: "/avatar.jpeg",
   });
   //定位页面位置
   setScreen();
