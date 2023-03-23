@@ -219,6 +219,8 @@ async function openCode() {
   let num = 0;
   if (indexUp.value == 0) num = 1000;
   if (indexUp.value == 1) num = 2000;
+  if (indexUp.value == 2) num = 100000;
+
   const res = await cloud.invoke("pay", { amount: num });
   payOrder.value = res.orderId;
   codeUrl.value = res.codeUrl;
@@ -319,10 +321,10 @@ function judgeUp() {
       <div class="cardbox">
         <!-- --------------------------------------------------------------- -->
         <el-card @click="select(0)" :class="indexUp === 0 ? 'box-card' : 'boxCard'">
-          <div class="useNumber">200次</div>
+          <div class="useNumber">400次</div>
           <div class="money">
             <span class="sign">￥</span>
-            <span class="number">10</span>
+            <span class="number">20</span>
           </div>
         </el-card>
 
@@ -333,10 +335,22 @@ function judgeUp() {
           :class="indexUp === 1 ? 'box-card' : 'boxCard'"
           class="box-card"
         >
-          <div class="useNumber">400次</div>
+          <div class="useNumber">1千次</div>
           <div class="money">
             <span class="sign">￥</span>
-            <span class="number">20</span>
+            <span class="number">50</span>
+          </div>
+        </el-card>
+
+        <el-card
+          @click="select(2)"
+          :class="indexUp === 2 ? 'box-card' : 'boxCard'"
+          class="box-card"
+        >
+          <div class="useNumber">2万次</div>
+          <div class="money">
+            <span class="sign">￥</span>
+            <span class="number">1000</span>
           </div>
         </el-card>
       </div>
@@ -684,6 +698,8 @@ textarea {
 
 .cardbox {
   display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 .box-card {
   cursor: pointer;
@@ -716,13 +732,14 @@ textarea {
   height: 80px;
   line-height: 80px;
   margin: auto;
-  text-align: center;
 }
 .sign {
   font-size: 16px;
   color: #e6a23c;
 }
 .number {
+  width: 100%;
+  text-align: center;
   font-size: 28px;
   font-weight: 700;
   color: #e6a23c;
