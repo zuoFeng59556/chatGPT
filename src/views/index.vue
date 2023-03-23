@@ -217,8 +217,8 @@ function select(e) {
 //点击充值
 async function openCode() {
   let num = 0;
-  if (indexUp.value == 0) num = 1000;
-  if (indexUp.value == 1) num = 2000;
+  if (indexUp.value == 0) num = 2000;
+  if (indexUp.value == 1) num = 5000;
   if (indexUp.value == 2) num = 100000;
 
   const res = await cloud.invoke("pay", { amount: num });
