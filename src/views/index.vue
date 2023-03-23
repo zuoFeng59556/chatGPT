@@ -292,7 +292,7 @@ function judgeUp() {
           <el-popover placement="bottom" :width="300" trigger="click">
             <el-image style="width: 100%; height: 100%" :src="wx" />
             <template #reference>
-              <el-button class="m-2">微信群</el-button>
+              <el-button class="m-2">交流群</el-button>
             </template>
           </el-popover>
           <!-- ------------------------------------------ -->
@@ -410,21 +410,31 @@ function judgeUp() {
 
     <!-- ------------------------------------------------------------ -->
     <div v-show="!list.length" class="begintitle">
-      <h1 style="font-family: Cursive">左风的智能机器人</h1>
-      <div class="sponsor">
-        基于 laf 云开发：
-        <a style="color: #01a99d" href="https://laf.dev/" target="_blank">laf.dev</a>
-      </div>
-      <div class="sponsor">此产品和 laf 达成深度合作，我们可以提供专业的私有化部署。</div>
-      <div class="sponsor">
-        如果您和您的公司需要私有化部署，点击
+      <h1 style="font-family: Cursive; font-size: 50px">Laf Ai</h1>
+
+      <div style="margin-top: 80px; text-indent: 20px">
+        如果想寻求合作或深度交流，可
         <a
-          style="color: #01a99d"
+          style="color: #ff0405"
           href="https://x85clg-wenjuan.site.laf.dev/#/pages/form/index?id=6412c9980ac642ce124ad116"
           target="_blank"
-          >这里</a
+          >点击</a
         >
-        留下您的信息，我们商务会在第一时间联系您。
+        留下信息<span v-if="isMobile === true">!</span>
+        <span v-if="isMobile === false">，我们顾问会第一时间联系您!</span>
+      </div>
+
+      <div style="margin-top: 10px">商务洽谈:18629359689</div>
+
+      <div class="lafText" v-if="isMobile === false">
+        <div style="text-align: center">
+          <a href="https://docs.sealos.io/zh-Hans/" style="color: #ff0405">Sealos</a>
+          <span> 开源云操作系统， </span>
+          <a href="https://laf.dev/" style="color: #ff0405">Laf</a>
+          <span> 开源函数计算平台 </span>
+        </div>
+        <div>快速交付分布式应用、小时级搭建个性化云系统、分钟级构建中间件服务</div>
+        <div>使用公有云IaaS的可降本50%，基于Sealos自建私有云可降本80%！</div>
       </div>
     </div>
 
@@ -572,9 +582,7 @@ function judgeUp() {
   word-wrap: break-word;
   padding: 0 0 10% 0;
 }
-.sponsor {
-  font-size: 18px;
-}
+
 .inputbox button {
   margin-left: 15px;
   width: 56px;
@@ -761,6 +769,12 @@ textarea {
   width: 80px;
   line-height: 40px;
 }
+.contentText {
+}
+.lafText {
+  margin-top: 50px;
+  color: #56585d;
+}
 
 :deep(.el-dialog__body) {
   padding: 0;
@@ -800,9 +814,6 @@ textarea {
     text-align: center;
     font-size: 12px;
     color: #606266;
-  }
-  .sponsor {
-    font-size: 14px;
   }
 }
 </style>
