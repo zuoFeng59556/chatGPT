@@ -5,9 +5,9 @@
 现在的版本有登陆和收费功能了，如果你是想用最初不用登陆的版本，请在 clone 项目之后 执行 git checkout a2faabbe7eac3e59520a4a48cfe5fea6ec545312 切换到最初的版本即可！
 
 在线地址 http://lafai.io/  
-如何开发属于自己的 chatGPT ？ 参考 [三分钟拥有自己的 ChatGPT (从开发到上线)](https://zuofeng59556.github.io/my-blog/pages/quickStart/chatGPT/) 
+如何开发属于自己的 chatGPT ？ 参考 [三分钟拥有自己的 ChatGPT (从开发到上线)](https://zuofeng59556.github.io/my-blog/pages/quickStart/chatGPT/)     
 
-
+如果二维码失效，加我微信拉你进群 wzj19980526 备注 chatgpt
 <img width="315" alt="wx-77aeabbd" src="https://user-images.githubusercontent.com/82700206/226231901-efd91888-f3d1-4c78-8122-aea864e42b5f.png">
 
 
