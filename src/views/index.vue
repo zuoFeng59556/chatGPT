@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { Cloud } from "laf-client-sdk";
-import wx from "../../public/wx.png";
+import wx from "../../public/wx.jpg";
 // 将marked 引入
 import { marked } from "marked";
 import { User } from "@element-plus/icons-vue";
@@ -162,7 +162,7 @@ function handleEnter(e) {
           <el-popover placement="bottom" :width="300" trigger="click">
             <el-image style="width: 100%; height: 100%" :src="wx" />
             <template #reference>
-              <el-button class="m-2">交流群</el-button>
+              <el-button class="m-2">联系微信</el-button>
             </template>
           </el-popover>
           <!-- ------------------------------------------ -->
@@ -186,13 +186,13 @@ function handleEnter(e) {
 
     <!-- ------------------------------------------------------------ -->
     <div v-show="!list.length" class="begintitle">
-      <h1 style="font-family: Cursive; font-size: 50px">Laf Ai</h1>
+      <h1 style="font-family: Cursive; font-size: 50px; color:darkcyan;">Melon AI</h1>
 
       <div style="margin-top: 80px; text-indent: 20px">
         如果想寻求合作或深度交流，可
         <a
           style="color: #ff0405"
-          href="https://x85clg-wenjuan.site.laf.dev/#/pages/form/index?id=6412c9980ac642ce124ad116"
+          href="mailto:iworkvip@gmail.com"
           target="_blank"
           >点击</a
         >
@@ -200,17 +200,17 @@ function handleEnter(e) {
         <span v-if="isMobile === false">，我们顾问会第一时间联系您!</span>
       </div>
 
-      <div style="margin-top: 10px">商务洽谈:18629359689</div>
+      <div style="margin-top: 10px">联系QQ:1440312008</div>
 
       <div class="lafText" v-if="isMobile === false">
         <div style="text-align: center">
-          <a href="https://docs.sealos.io/zh-Hans/" style="color: #ff0405">Sealos</a>
-          <span> 开源云操作系统， </span>
-          <a href="https://laf.dev/" style="color: #ff0405">Laf</a>
-          <span> 开源函数计算平台 </span>
+          <a href="https://docs.sealos.io/zh-Hans/" style="color: #ff0405">Melon AI</a>
+          <span> 基于ChatGPT </span>
+          <a href="https://laf.dev/" style="color: #ff0405">ChatGPT</a>
+          <span> 是OpenAI训练的一种大型语言模型 </span>
         </div>
-        <div>快速交付分布式应用、小时级搭建个性化云系统、分钟级构建中间件服务</div>
-        <div>使用公有云IaaS的可降本50%，基于Sealos自建私有云可降本80%！</div>
+        <div>它可以用来进行对话生成、文本创作、自然语言理解等任务。ChatGPT使用了深度学习技术，</div>
+        <div>可以根据输入的提示或上下文来生成连贯的回答或文章。</div>
       </div>
     </div>
 
