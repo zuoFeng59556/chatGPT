@@ -204,9 +204,9 @@ function handleEnter(e) {
 
       <div class="lafText" v-if="isMobile === false">
         <div style="text-align: center">
-          <a href="https://docs.sealos.io/zh-Hans/" style="color: #ff0405">Melon AI</a>
-          <span> 基于ChatGPT </span>
-          <a href="https://laf.dev/" style="color: #ff0405">ChatGPT</a>
+          <a href="javascript:void(0)" style="color: darkcyan">Melon AI</a>
+          <span> 基于ChatGPT，</span>
+          <a href="https://platform.openai.com/overview" style="color: #ff0405">ChatGPT</a>
           <span> 是OpenAI训练的一种大型语言模型 </span>
         </div>
         <div>它可以用来进行对话生成、文本创作、自然语言理解等任务。ChatGPT使用了深度学习技术，</div>
