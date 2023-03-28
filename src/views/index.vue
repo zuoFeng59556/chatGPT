@@ -158,6 +158,25 @@ function handleEnter(e) {
     <el-row class="head">
       <div>
         <el-col :span="24">
+
+          <!--  访问总数 -->
+          <!-- ------------------------------------------ -->
+               <el-text class="mx-1">
+                访问人数:<span style="color:green" id="busuanzi_value_site_uv"></span>
+               </el-text>
+          <!-- ------------------------------------------ -->
+
+          <el-divider direction="vertical" />
+
+          <!--  请求总数 -->
+          <!-- ------------------------------------------ -->
+               <el-text class="mx-1">
+                请求次数:<span style="color:green" id="busuanzi_value_site_pv"></span>
+               </el-text>
+          <!-- ------------------------------------------ -->
+
+          <el-divider direction="vertical" />
+
           <!-- ------------------------------------------ -->
           <el-popover placement="bottom" :width="300" trigger="click">
             <el-image style="width: 100%; height: 100%" :src="wx" />
@@ -213,6 +232,7 @@ function handleEnter(e) {
         <div>可以根据输入的提示或上下文来生成连贯的回答或文章。</div>
       </div>
     </div>
+
 
     <!-- 页面消息列表 -->
     <div id="myList">
