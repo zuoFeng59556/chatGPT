@@ -87,8 +87,8 @@ async function getAmount() {
 async function getCode() {
   if (!tel.test(phone.value)) return (err.value = true);
   if (codebut.value) return;
-  const res = await cloud.invoke("getCode", { phone: phone.value });
   countDown();
+  const res = await cloud.invoke("getCode", { phone: phone.value });
 }
 
 //验证码倒计时
