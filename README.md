@@ -2,7 +2,7 @@
 ~~基于 laf 开发的 chatGPT 免费 免登录 免翻墙 点击开聊~~      
 用的人太多了，作者扛不住了，现在安次数收费。。。   
 
-现在的版本有登陆和收费功能了，如果你是想用最初不用登陆的版本，请在 clone 项目之后 执行 git checkout a2faabbe7eac3e59520a4a48cfe5fea6ec545312 切换到最初的版本即可！
+现在的版本有登陆和收费功能了，如果你是想用最初不用登陆的版本，请在选择 feat-1 分支。
 
 在线地址 http://lafai.io/  
 如何开发属于自己的 chatGPT ？ 参考 [三分钟拥有自己的 ChatGPT (从开发到上线)](https://zuofeng59556.github.io/my-blog/pages/quickStart/chatGPT/)     
