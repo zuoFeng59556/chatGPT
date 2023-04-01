@@ -7,7 +7,6 @@ import { marked } from "marked";
 const cloud = new Cloud({
   baseUrl: "https://jyf6wk.laf.dev",
   getAccessToken: () => "",
-  timeout: 60000,
 });
 
 const list = ref([]);
