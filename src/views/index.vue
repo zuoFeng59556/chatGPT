@@ -9,7 +9,7 @@ import QrcodeVue from "qrcode.vue";
 import { ElMessage } from "element-plus";
 
 const cloud = new Cloud({
-  baseUrl: "https://jyf6wk.laf.dev",
+  baseUrl: "https://<APPID>.laf.dev",
   getAccessToken: () => localStorage.getItem("access_token"),
   timeout: 60000,
 });
