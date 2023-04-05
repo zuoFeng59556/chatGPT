@@ -7,6 +7,9 @@ import { marked } from "marked";
 import { User } from "@element-plus/icons-vue";
 import QrcodeVue from "qrcode.vue";
 import { ElMessage } from "element-plus";
+import axios from "axios";
+import MarkdownIt from "markdown-it";
+import hljs from "highlight.js";
 
 const cloud = new Cloud({
   baseUrl: "https://<APPID>.laf.dev",
@@ -164,14 +167,66 @@ async function send() {
     return;
   }
   try {
-    if (!parentMessageId.value) {
-      res = await cloud.invoke("send", { message });
-    } else {
-      res = await cloud.invoke("send", {
-        message,
-        parentMessageId: parentMessageId.value,
-      });
-    }
+    // if (!parentMessageId.value) {
+    //   res = await cloud.invoke("test-send", { message });
+    // } else {
+    //   res = await cloud.invoke("test-send", {
+    //     message,
+    //     parentMessageId: parentMessageId.value,
+    //   });
+    // }
+    // &id=${parentMessageId.value}
+
+    const md = new MarkdownIt({
+      highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          try {
+            return (
+              '<pre class="hljs"><code>' +
+              hljs.highlight(lang, str, true).value +
+              "</code></pre>"
+            );
+          } catch (__) {}
+        }
+        return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + "</code></pre>";
+      },
+    });
+
+    list.value.push({
+      text: "",
+      avatar: "/logo.jpg",
+    });
+
+    const token = localStorage.getItem("access_token");
+
+    const obj = { message };
+    if (parentMessageId.value) obj.parentMessageId = parentMessageId.value;
+
+    axios({
+      url: `https://jyf6wk.laf.dev/send`,
+      method: "post",
+      data: obj,
+      responseType: "text",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      onDownloadProgress: function (progressEvent) {
+        const xhr = progressEvent.event.target;
+
+        const { responseText } = xhr;
+
+        const parts = responseText.split("--!");
+        parentMessageId.value = parts[1];
+
+        list.value[list.value.length - 1].text = md.render(parts[0]);
+        loading.value = false;
+        setScreen();
+      },
+    }).then(() => {
+      getAmount();
+    });
+
+    // 返回 id 并保存
   } catch (error) {
     console.log(error);
     loading.value = false;
@@ -182,19 +237,6 @@ async function send() {
     setScreen();
     return;
   }
-
-  parentMessageId.value = res.id;
-
-  res.text = marked.parse(res.text);
-
-  list.value.push({
-    text: res.text,
-    avatar: "/logo.jpg",
-  });
-
-  loading.value = false;
-  getAmount();
-  setScreen();
 }
 
 //定位页面位置
@@ -454,9 +496,13 @@ function judgeUp() {
 
     <!-- 页面消息列表 -->
     <div id="myList">
-      <div :class="item.type === 0 ? 'problemList' : 'answerList'" v-for="item in list">
+      <div
+        v-show="item.text"
+        :class="item.type === 0 ? 'problemList' : 'answerList'"
+        v-for="item in list"
+      >
         <img class="listImg" :src="item.avatar" alt="" />
-        <div v-highlight v-html="item.text" class="listText"></div>
+        <div v-html="item.text" class="listText"></div>
       </div>
 
       <div v-show="loading" class="answerList">
