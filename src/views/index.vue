@@ -12,7 +12,7 @@ import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
 
 const cloud = new Cloud({
-  baseUrl: "https://<APPID>.laf.dev",
+  baseUrl: "https://jyf6wk.laf.dev",
   getAccessToken: () => localStorage.getItem("access_token"),
   timeout: 60000,
 });
@@ -167,16 +167,6 @@ async function send() {
     return;
   }
   try {
-    // if (!parentMessageId.value) {
-    //   res = await cloud.invoke("test-send", { message });
-    // } else {
-    //   res = await cloud.invoke("test-send", {
-    //     message,
-    //     parentMessageId: parentMessageId.value,
-    //   });
-    // }
-    // &id=${parentMessageId.value}
-
     const md = new MarkdownIt({
       highlight: function (str, lang) {
         if (lang && hljs.getLanguage(lang)) {
@@ -188,7 +178,11 @@ async function send() {
             );
           } catch (__) {}
         }
-        return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + "</code></pre>";
+        return (
+          '<pre class="hljs"><code>' +
+          md.utils.escapeHtml(str.replace(/[\r\n]+/g, "\n")) +
+          "</code></pre>"
+        );
       },
     });
 
@@ -518,7 +512,7 @@ function judgeUp() {
       <el-input
         v-model="question"
         v-bind:readonly="loading"
-        maxlength="1000"
+        maxlength="2000"
         tabindex="0"
         :autosize="{ minRows: 1, maxRows: 5 }"
         type="textarea"
