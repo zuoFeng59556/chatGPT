@@ -5,10 +5,9 @@
 现在的版本有登陆和收费功能了，如果你是想用最初不用登陆的版本，请在选择 feat-1 分支。
 
 在线地址 http://lafai.io/  
-如何开发属于自己的 chatGPT ？ 参考 [三分钟拥有自己的 ChatGPT (从开发到上线)](https://zuofeng59556.github.io/my-blog/pages/quickStart/chatGPT/)     
+如何开发属于自己的 chatGPT ？ 参考 [三分钟拥有自己的 ChatGPT (从开发到上线)](https://www.bilibili.com/video/BV1Va4y1N7XZ/?spm_id_from=333.999.list.card_archive.click&vd_source=903c2b09b7412037c2eddc6a8fb9828b)     
 
-如果二维码失效，加我微信拉你进群 wzj19980526 备注 chatgpt
-<img width="315" alt="wx-77aeabbd" src="https://user-images.githubusercontent.com/82700206/226231901-efd91888-f3d1-4c78-8122-aea864e42b5f.png">
+### 加我微信拉你进群 wzj19980526 备注 chatgpt
 
 
 
