@@ -186,7 +186,6 @@ function setScreen() {
         type="text"
         id="message"
         placeholder="输入你的指令"
-        maxlength="100"
       />
       <div class="btn-send" id="submit-btn" @click="send">
         <div class="send-view" style="display: flex">
