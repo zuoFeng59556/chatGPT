@@ -9,7 +9,7 @@ import QrcodeVue from "qrcode.vue";
 import { ElMessage } from "element-plus";
 
 const cloud = new Cloud({
-  baseUrl: "https://t2eap0.laf.dev",
+  baseUrl: "https://i34hgt.laf.dev",
   getAccessToken: () => localStorage.getItem("access_token"),
   timeout: 60000,
 });
@@ -100,9 +100,9 @@ async function send() {
   }
   try {
     if (!parentMessageId.value) {
-      res = await cloud.invoke("send", { message });
+      res = await cloud.invoke("openai-client", { message });
     } else {
-      res = await cloud.invoke("send", {
+      res = await cloud.invoke("openai-client", {
         message,
         parentMessageId: parentMessageId.value,
       });
@@ -229,7 +229,9 @@ function handleEnter(e) {
           <span> 是OpenAI训练的一种大型语言模型 </span>
         </div>
         <div>它可以用来进行对话生成、文本创作、自然语言理解等任务。ChatGPT使用了深度学习技术，</div>
-        <div>可以根据输入的提示或上下文来生成连贯的回答或文章。</div>
+        <div>可以根据输入的提示或上下文来生成连贯的回答或文章。</div><br/>
+        <div style="font-size:0.7em; text-align: right: inherit;">更新关于ChatGPT的信息请访问 
+          <a href="https://www.melonkid.cn" target="_blank" style="color: darkcyan">Melonkid</a> </div>
       </div>
     </div>
 
