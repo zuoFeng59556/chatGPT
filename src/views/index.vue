@@ -63,7 +63,7 @@ async function send() {
     if (parentMessageId.value) obj.parentMessageId = parentMessageId.value;
 
     axios({
-      url: "https://jyf6wk.laf.dev/test-send",
+      url: "https://jyf6wk.laf.dev/test",
       method: "post",
       data: obj,
       responseType: "text",
@@ -112,7 +112,7 @@ function setScreen() {
 <template>
   <div class="page">
     <div class="begintitle">
-      <h1 v-show="!list.length" @click="send">左风的ChatGPT</h1>
+      <h1 v-show="!list.length">左风的ChatGPT</h1>
     </div>
 
     <div id="myList">
@@ -211,9 +211,9 @@ function setScreen() {
     <div class="steppingstone"></div>
 
     <div class="inputbox">
-      <el-input
+      <input
         v-bind:readonly="loading"
-        @keypress="handleEnter"
+        @keyup.enter="send"
         tabindex="0"
         data-id="root"
         rows="1"
@@ -222,7 +222,6 @@ function setScreen() {
         id="message"
         placeholder="输入你的指令"
       />
-
       <div class="btn-send" id="submit-btn" @click="send">
         <div class="send-view" style="display: flex">
           <svg
@@ -333,6 +332,7 @@ function setScreen() {
   margin: 0 auto;
   display: flex;
   align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.3);
   padding-right: 12px;
   background: #fff;
   border-radius: 8px;
